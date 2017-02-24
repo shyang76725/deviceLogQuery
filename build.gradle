@@ -1,0 +1,52 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = '0.0.1'
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-web:1.5.1.RELEASE")
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+	compile "net.sf.json-lib:json-lib:2.4:jdk15"
+	compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.6.RELEASE'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+	compile group: 'com.zaxxer', name: 'HikariCP', version: '2.5.1'
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212'
+	compile group: 'p6spy', name: 'p6spy', version: '3.0.0'
+	compile group: 'org.json', name: 'json', version: '20160810'
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+jar {
+	baseName = 'deviceLogQuery'
+	manifest {
+        attributes 'Implementation-Title': baseName,
+                   'Implementation-Version': version,
+                   'Main-Class': 'com.quanta.bu12.qoca.utility.DeviceLogQueryApplication'
+                   
+    }
+}
+
+task fatJar(type: Jar) {
+	baseName = 'deviceLogQuery'
+	version = '0.0.1'
+	manifest {
+        attributes 'Implementation-Title': baseName,
+                   'Implementation-Version': version,
+                   'Main-Class': 'com.quanta.bu12.qoca.utility.DeviceLogQueryApplication'
+                   
+    }
+    from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } 
+		configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+		configurations.testRuntime.collect { it.isDirectory() ? it : zipTree(it) }
+	}       
+    with jar
+}
